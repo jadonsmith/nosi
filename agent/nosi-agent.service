@@ -1,0 +1,10 @@
+[Unit]
+Description=NOSI heartbeat agent
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/nosi/agent.env
+ExecStart=/usr/local/bin/nosi-agent.sh
+Nice=10
