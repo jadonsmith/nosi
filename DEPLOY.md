@@ -1,5 +1,22 @@
 # Deploying NOSI
 
+## jadon.me (how production actually runs)
+
+Every push to `master` triggers `.github/workflows/image.yml`, which builds the
+image on GitHub and publishes `ghcr.io/jadonsmith/nosi:latest` (public). The
+droplet never builds — it only pulls:
+
+```bash
+ssh jadon.me 'cd ~/nosi && docker compose pull app && docker compose up -d'
+```
+
+`~/nosi` on the server holds `docker-compose.yml`, a
+`docker-compose.override.yml` (GHCR image, `nosi-app` on the shared `web`
+network, no host port) and `.env`. Migrations run automatically on container
+start. Caddy (in `~/infra`) routes `nosi.jadon.me` → `nosi-app:3000`.
+
+The sections below are the generic self-hosting options.
+
 Two supported paths. Both assume a Linux box reachable over SSH and a domain
 (e.g. `nosi.jadon.me`) pointed at it.
 
