@@ -10,9 +10,12 @@ const geistSans = Geist({ variable: "--font-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: { default: "NOSI", template: "%s · NOSI" },
+  title: {
+    default: "NOSI · Network Observation & Status Interface",
+    template: "%s · NOSI",
+  },
   description:
-    "Lightweight infrastructure monitoring — live host heartbeats, metrics, and a world map of your fleet.",
+    "NOSI (Network Observation & Status Interface): lightweight infrastructure monitoring with live host heartbeats, metrics, and a world map of your fleet.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

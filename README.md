@@ -1,6 +1,7 @@
 # NOSI
 
-Lightweight infrastructure monitoring. A tiny shell agent on every host POSTs a
+**Network Observation & Status Interface.** Lightweight infrastructure monitoring.
+A tiny shell agent on every host POSTs a
 resource heartbeat once a minute; this app stores the series and renders a live
 dashboard, per-host metrics, and a world map of the fleet.
 
