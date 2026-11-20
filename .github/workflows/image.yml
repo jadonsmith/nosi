@@ -6,6 +6,10 @@ on:
   push:
     branches: [master, main]
   workflow_dispatch:
+  # Daily rebuild on the latest node:24-alpine base so security patches land
+  # without a code change. The droplet's ~/infra/auto-update.sh pulls at 10:00 UTC.
+  schedule:
+    - cron: "15 9 * * *"
 
 permissions:
   contents: read
@@ -26,12 +30,19 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - id: meta
-        run: echo "image=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "image=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+          # Stamp the image with the commit time, so a scheduled rebuild with no new
+          # base image yields the same digest and the droplet doesn't restart NOSI.
+          echo "epoch=$(git log -1 --format=%ct)" >> "$GITHUB_OUTPUT"
 
       - uses: docker/build-push-action@v6
+        env:
+          SOURCE_DATE_EPOCH: ${{ steps.meta.outputs.epoch }}
         with:
           context: .
           platforms: linux/amd64
+          pull: true
           push: true
           tags: |
             ${{ steps.meta.outputs.image }}:latest
