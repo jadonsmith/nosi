@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { EyeIcon, LogOutIcon } from "lucide-react";
+import { ArrowLeftIcon, EyeIcon, LogOutIcon } from "lucide-react";
 import { cn } from "cn";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -41,7 +41,7 @@ export function SiteNav() {
   return (
     <header className="sticky top-0 z-40 border-b border-foreground/10 bg-background/70 backdrop-blur-xl">
       <div className="mx-auto flex h-14 max-w-7xl items-center gap-2 px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-2 pr-2">
+        <Link href="/" className="flex shrink-0 items-center gap-2 pr-2">
           <span className="grid size-7 place-items-center rounded-lg bg-gradient-to-br from-brand-from to-brand-to text-white shadow-sm">
             <EyeIcon className="size-4" />
           </span>
@@ -50,7 +50,9 @@ export function SiteNav() {
           </span>
         </Link>
 
-        <nav className="flex items-center gap-1">
+        {/* On narrow screens the links scroll sideways so the controls on the right stay visible.
+            self-stretch keeps the active underline inside the scroll box. */}
+        <nav className="flex min-w-0 items-center gap-1 self-stretch overflow-x-auto [scrollbar-width:none]">
           {LINKS.map((l) => {
             const active =
               l.href === "/" ? pathname === "/" : pathname.startsWith(l.href);
@@ -74,7 +76,18 @@ export function SiteNav() {
           })}
         </nav>
 
-        <div className="ml-auto flex items-center gap-1">
+        <div className="ml-auto flex shrink-0 items-center gap-1">
+          <a
+            href="https://jadon.me/"
+            aria-label="Back to jadon.me"
+            className={cn(
+              buttonVariants({ variant: "ghost", size: "sm" }),
+              "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            <ArrowLeftIcon />
+            <span className="hidden sm:inline">jadon.me</span>
+          </a>
           <ThemeToggle />
           {authed ? (
             <>
